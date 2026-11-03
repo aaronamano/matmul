@@ -61,8 +61,8 @@ int main()
     for (int j=0; j<colB; j++){
       for (int k=0; k<colA; k++){
         result[i][j] += A[i][k] * B[k][j];
-        cout << result[i][j] << " ";
       }
+      cout << result[i][j] << " ";
     }
   }
   cout << "\n";
