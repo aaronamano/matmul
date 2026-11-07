@@ -4,16 +4,18 @@
 #include <iomanip>
 using namespace std;
 
+// function prototypes
+vector<vector<int>> createA(int& rowA, int& colA);
+vector<vector<int>> createB(int& rowB, int& colB);
+vector<vector<int>> createResult(int& rowA, int& colB);
+void matmul(int& rowA, int& colA, int& colB, const vector<vector<int>>& matrixA, const vector<vector<int>>& matrixB, vector<vector<int>> resultMatrix);
+
 int main()
 {
-  // initialize result matrices
-  vector<vector<int>> A;
-  vector<vector<int>> B;
-  vector<vector<int>> result;
-
   // initialize dimensions for matrix A and B
   int rowA, colA, rowB, colB;
 
+  // prompt user to input number of rows and columns for A and B
   cout << "Enter number of rows for A: ";
   cin >> rowA;
 
@@ -31,55 +33,16 @@ int main()
   cout << "Enter number of columns for B: ";
   cin >> colB;
 
-  // initialize value variable to fill for matrix A and B
-  int value;
-
   // create matrices A, B, and result
-  value = 1;
-  for (int i = 0; i < rowA; i++)
-  {
-    A.push_back({});
-    for (int j = 0; j < colA; j++)
-    {
-      A[i].push_back(value++);
-    }
-  }
-
-  value = 1;
-  for (int i = 0; i < rowB; i++)
-  {
-    B.push_back({});
-    for (int j = 0; j < colB; j++)
-    {
-      B[i].push_back(value++);
-    }
-  }
-
-  for (int i = 0; i < rowA; i++)
-  {
-    result.push_back({});
-    for (int j = 0; j < colB; j++)
-    {
-      result[i].push_back(0);
-    }
-  }
+  const vector<vector<int>> matrixA = createA(rowA, colA);
+  const vector<vector<int>> matrixB = createB(rowB, colB);
+  vector<vector<int>> resultMatrix = createResult(rowA, colB);
 
   // start recording time
   const auto start = chrono::steady_clock::now();
 
   // perform matmul
-  for (int i = 0; i < rowA; i++)
-  {
-    cout << "\n";
-    for (int j = 0; j < colB; j++)
-    {
-      for (int k = 0; k < colA; k++)
-      {
-        result[i][j] += A[i][k] * B[k][j];
-      }
-      cout << result[i][j] << " ";
-    }
-  }
+  matmul(rowA, colA, colB, matrixA, matrixB, resultMatrix);
 
   // stop recording time
   const auto end = chrono::steady_clock::now();
@@ -98,4 +61,73 @@ int main()
        << "Throughput: " << gops << " GOP/s\n";
 
   return 0;
+}
+
+// after initializing row and col dimensions for matrix A and B, these will be passed by reference to the functions that construct matrix A, B, and result instead of copying the dimensions
+
+vector<vector<int>> createA(int& rowA, int& colA)
+{
+  int value = 1;
+  vector<vector<int>> A;
+
+  for (int i = 0; i < rowA; i++)
+  {
+    A.push_back({});
+    for (int j = 0; j < colA; j++)
+    {
+      A[i].push_back(value++);
+    }
+  }
+
+  return A;
+}
+
+vector<vector<int>> createB(int& rowB, int& colB)
+{
+  int value = 1;
+  vector<vector<int>> B;
+
+  for (int i = 0; i < rowB; i++)
+  {
+    B.push_back({});
+    for (int j = 0; j < colB; j++)
+    {
+      B[i].push_back(value++);
+    }
+  }
+
+  return B;
+}
+
+vector<vector<int>> createResult(int& rowA, int& colB)
+{
+  vector<vector<int>> result;
+
+  for (int i = 0; i < rowA; i++)
+  {
+    result.push_back({});
+    for (int j = 0; j < colB; j++)
+    {
+      result[i].push_back(0);
+    }
+  }
+
+  return result;
+}
+
+// after creating matrix A and B these will be passed by reference to matmul instead of copying matrix A and B
+void matmul(int& rowA, int& colA, int& colB, const vector<vector<int>>& matrixA, const vector<vector<int>>& matrixB, vector<vector<int>> resultMatrix)
+{
+  for (int i = 0; i < rowA; i++)
+  {
+    cout << "\n";
+    for (int j = 0; j < colB; j++)
+    {
+      for (int k = 0; k < colA; k++)
+      {
+        resultMatrix[i][j] += matrixA[i][k] * matrixB[k][j];
+      }
+      cout << resultMatrix[i][j] << " ";
+    }
+  }
 }
