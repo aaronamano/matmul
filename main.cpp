@@ -5,10 +5,9 @@
 using namespace std;
 
 // function prototypes
-vector<vector<int>> createA(int& rowA, int& colA);
-vector<vector<int>> createB(int& rowB, int& colB);
-vector<vector<int>> createResult(int& rowA, int& colB);
-void matmul(int& rowA, int& colA, int& colB, const vector<vector<int>>& matrixA, const vector<vector<int>>& matrixB, vector<vector<int>> resultMatrix);
+vector<vector<int>> createMatrix(int &n, int &m);
+vector<vector<int>> createResult(int &rowA, int &colB);
+void matmul(int &rowA, int &colA, int &colB, const vector<vector<int>> &matrixA, const vector<vector<int>> &matrixB, vector<vector<int>> resultMatrix);
 
 int main()
 {
@@ -34,8 +33,8 @@ int main()
   cin >> colB;
 
   // create matrices A, B, and result
-  const vector<vector<int>> matrixA = createA(rowA, colA);
-  const vector<vector<int>> matrixB = createB(rowB, colB);
+  const vector<vector<int>> matrixA = createMatrix(rowA, colA);
+  const vector<vector<int>> matrixB = createMatrix(rowB, colB);
   vector<vector<int>> resultMatrix = createResult(rowA, colB);
 
   // start recording time
@@ -63,43 +62,26 @@ int main()
   return 0;
 }
 
-// after initializing row and col dimensions for matrix A and B, these will be passed by reference to the functions that construct matrix A, B, and result instead of copying the dimensions
-
-vector<vector<int>> createA(int& rowA, int& colA)
+// after initializing row and col dimensions for matrix A and B, these will be passed by reference to the createMatrix function that construct matrix A and B
+vector<vector<int>> createMatrix(int &n, int &m)
 {
   int value = 1;
-  vector<vector<int>> A;
+  vector<vector<int>> matrix;
 
-  for (int i = 0; i < rowA; i++)
+  for (int i = 0; i < n; i++)
   {
-    A.push_back({});
-    for (int j = 0; j < colA; j++)
+    matrix.push_back({});
+    for (int j = 0; j < m; j++)
     {
-      A[i].push_back(value++);
+      matrix[i].push_back(value++);
     }
   }
 
-  return A;
+  return matrix;
 }
 
-vector<vector<int>> createB(int& rowB, int& colB)
-{
-  int value = 1;
-  vector<vector<int>> B;
-
-  for (int i = 0; i < rowB; i++)
-  {
-    B.push_back({});
-    for (int j = 0; j < colB; j++)
-    {
-      B[i].push_back(value++);
-    }
-  }
-
-  return B;
-}
-
-vector<vector<int>> createResult(int& rowA, int& colB)
+// after initializing row and col dimensions for matrix A and B, number of rows for A and number of columns for B will be passed by reference to createResult to build the result matrix
+vector<vector<int>> createResult(int &rowA, int &colB)
 {
   vector<vector<int>> result;
 
@@ -115,8 +97,8 @@ vector<vector<int>> createResult(int& rowA, int& colB)
   return result;
 }
 
-// after creating matrix A and B these will be passed by reference to matmul instead of copying matrix A and B
-void matmul(int& rowA, int& colA, int& colB, const vector<vector<int>>& matrixA, const vector<vector<int>>& matrixB, vector<vector<int>> resultMatrix)
+// after creating matrix A and B these will be passed by reference to matmul
+void matmul(int &rowA, int &colA, int &colB, const vector<vector<int>> &matrixA, const vector<vector<int>> &matrixB, vector<vector<int>> resultMatrix)
 {
   for (int i = 0; i < rowA; i++)
   {
